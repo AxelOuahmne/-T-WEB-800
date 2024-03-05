@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+
+
+COPY package*.json ./
+COPY package-lock.json ./
+
+COPY . ./
+
+
+EXPOSE 4000
+
+RUN chmod +x base_launch.sh
+
+CMD ["sh","base_launch.sh"]
