@@ -6,12 +6,16 @@ require("dotenv").config(); // environment variable
 const userRoutes = require('./routes/user');
 
 // Connexion à la base de données MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => console.log('Connecté à la base de données MongoDB'))
     .catch(err => {
         console.error('Erreur de connexion à la base de données:', err);
         process.exit(1); // Arrête l'application en cas d'échec de la connexion à la base de données
     });
+
 
 const app = express();    
 
