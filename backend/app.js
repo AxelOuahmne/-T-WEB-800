@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 require("dotenv").config(); // environment variable
 
 const userRoutes = require('./routes/user');
+//const ApiRoutes  = require('./routes/api');
 
 // Connexion à la base de données MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -29,5 +30,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use('/api/auth', userRoutes);
+//app.use('/api', ApiRoutes);
+
 
 module.exports = app;
