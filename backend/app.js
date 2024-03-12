@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 require("dotenv").config(); // environment variable
 
 const userRoutes = require('./routes/user');
-//const ApiRoutes  = require('./routes/api');
+const apiRoutes  = require('./routes/api'); // Assurez-vous que vous utilisez également apiRoutes
 
 // Connexion à la base de données MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -17,8 +17,7 @@ mongoose.connect(process.env.MONGODB_URI, {
         process.exit(1); // Arrête l'application en cas d'échec de la connexion à la base de données
     });
 
-
-const app = express();    
+const app = express();
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,7 +29,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use('/api/auth', userRoutes);
-//app.use('/api', ApiRoutes);
-
+app.use('/api', apiRoutes); // Assurez-vous que vous utilisez également apiRoutes
 
 module.exports = app;
