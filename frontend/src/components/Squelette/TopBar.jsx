@@ -1,14 +1,11 @@
-import { Box, Button, IconButton, InputBase, Stack, Toolbar, Typography, alpha, styled, useTheme } from "@mui/material"
+import { Box, Button, IconButton, InputBase, Stack, Toolbar, alpha, styled, useTheme } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import MuiAppBar from '@mui/material/AppBar';
-import Person from '@mui/icons-material/PersonOutlined';
 import Sunny from '@mui/icons-material/WbSunnyOutlined';
-import Setting from '@mui/icons-material/SettingsOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
-import Notifications from '@mui/icons-material/NotificationsOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import logo from "../../assets/Kayak-logo-2.png"
 const drawerWidth = 240;
 
 
@@ -90,15 +87,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
           >
             <MenuIcon />
           </IconButton>
-          {/* <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search> */}
+          <img src={logo} alt="Kayak-logo-2" width={120} />
           <Box flexGrow={1} />
 
           <Stack direction={"row"}>
