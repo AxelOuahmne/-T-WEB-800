@@ -3,6 +3,7 @@ const axios = require("axios");
 // Endpoint pour la fonctionnalité "sleep"
 exports.getApiSleep = async (req, res, next) => {
     try {
+        //danrouatille
         // Logique pour récupérer et renvoyer les hébergements disponibles
         const clientID = 'AIFQFRE5RBLZVNNW5RIGHK2JJN1TBW2AAZBIW5XXYKJM1O0O'; // Remplacez par votre client ID Foursquare
         const clientSecret = 'fsq3nGQfpDO21kRzyBsWLX6n/B/5BTQkdQGPEXZjnZmct80='; // Remplacez par votre client secret Foursquare
