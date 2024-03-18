@@ -50,7 +50,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function CustomizedMenus() {
+export default function CustomizedMenus({user}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -76,7 +76,7 @@ const logout = useLogout();
         variant="outlined" startIcon={< AccountCircle/>}  sx={{padding:"10px" ,marginLeft:"10px"}} color="inherit"
         endIcon={<KeyboardArrowDownIcon />}
       >
-        Mon compte
+        {!user?"Mon compte":user}
       </Button>
       <StyledMenu
         id="demo-customized-menu"
