@@ -9,21 +9,25 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Vols from './pages/vols/Vols.jsx';
-// import { AuthContextProvaider } from './context/AuthContext.js';
+import SignUp from './pages/auth/SignUp.jsx';
+import Login from './pages/auth/Login.jsx';
+import {AuthContextProvaider}  from './context/AuthContext';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
     <Route path="/vols" element={<Vols />} />
+    <Route path="/Login" element={<Login />} />
+    <Route path="/signup" element={<SignUp />} />
       {/* ... etc. */}
     </Route>
   )
 );
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {/* <AuthContextProvaider> */}
+    <AuthContextProvaider>
     <RouterProvider router={router} />
-    {/* </AuthContextProvaider> */}
+    </AuthContextProvaider>
    
   </React.StrictMode>
 );
