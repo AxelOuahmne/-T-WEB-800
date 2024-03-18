@@ -6,6 +6,7 @@ import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from "../../assets/Kayak-logo-2.png"
+import CustomizedMenus from "./Menu";
 const drawerWidth = 240;
 
 
@@ -122,6 +123,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
             <Button variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
             Connexion
             </Button>
+            <CustomizedMenus/>
 
           </Stack>
 
