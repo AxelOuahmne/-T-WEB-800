@@ -7,6 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from "../../assets/Kayak-logo-2.png"
 import CustomizedMenus from "./Menu";
+import { useAuthContext } from "../../hooks/useAuthContext";
 const drawerWidth = 240;
 
 
@@ -71,6 +72,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function TopBar({ open, handleDrawerOpen, setMode }) {
   const theme = useTheme();
+
+  const {user} = useAuthContext();
   return (
     <>
 
@@ -120,10 +123,10 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
             <IconButton color="inherit">
               <FavoriteIcon />  
             </IconButton>
-            <Button variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
+            {!user&&(<Button variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
             Connexion
-            </Button>
-            <CustomizedMenus/>
+            </Button>)}
+            {user&&(<CustomizedMenus user={user.user.nom}/>)}
 
           </Stack>
 
