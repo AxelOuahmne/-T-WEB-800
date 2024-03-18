@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
-import { Box, InputBase, TextField, Typography, alpha } from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search';
+import { Box, alpha } from "@mui/material"; // Importez alpha depuis @mui/material
 import FlightIcon from '@mui/icons-material/Flight';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from "@mui/x-date-pickers/DatePicker"
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useEffect } from "react";
+
+// Le reste du code reste inchangé...
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -30,62 +33,88 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
 }));
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    width: '100%',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': {
-                width: '20ch',
-            },
-        },
-    },
-}));
+
 const Vols = () => {
+    useEffect(() => {
+        // Charger le script d'autocomplétion ici
+        const script = document.createElement("script");
+        script.src = "/autocomplete.js";
+        script.async = true;
+        document.body.appendChild(script);
+
+        // Nettoyer le script lors du démontage du composant
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
+    useEffect(() => {
+        // Initialiser l'autocomplétion ici
+        $('.searchName').autocomplete({
+            source: function(req, res){
+                $.ajax({
+                    url: "/api/airport",
+                    dataType: "json",
+                    type:"GET",
+                    data:req,
+                    success: function (data){
+                        res($.map(data, function(el){
+                            return {
+                                label: el.address.cityName + ' (' + el.iataCode +')',
+                                value: el.iataCode
+                            };
+                        }));
+                    },
+                    error: function(err){
+                        console.log(err.status);
+                    }
+                });
+            }
+        });
+    }, []);
+
     return (
         <Box>
-            <h1>Où voulez-vous partir ? </h1>
-            <Box sx={{ display: "flex", justifyContent: "center",gap:"20px" }}>
-                <Search  style={{ width:"400px", display:"flex", alignItems:"center" ,padding:"5px 0px"}} >
+            <h1>Où voulez-vous partir ?</h1>
+            <Box sx={{ display: "flex", justifyContent: "center", gap: "20px" }}>
+                {/* Premier champ */}
+                <Search style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
                     <SearchIconWrapper>
                         <FlightIcon />
                     </SearchIconWrapper>
-                    <StyledInputBase
+                    <input
                         placeholder="De ..."
-                        inputProps={{ 'aria-label': 'search' }}
+                        type="text"
+                        aria-label="search"
+                        className="searchName"
                     />
                 </Search>
-                <SyncAltIcon  sx={{fontSize:"40px"}} />
-                <Search style={{ width:"400px", display:"flex", alignItems:"center" ,padding:"5px 0px"}}>
+                {/* Deuxième champ (nouveau champ) */}
+                <Search style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
                     <SearchIconWrapper>
                         <FlightIcon />
                     </SearchIconWrapper>
-                    <StyledInputBase
-                        placeholder="A ..."
-                        inputProps={{ 'aria-label': 'search' }}
+                    <input
+                        placeholder="À ..."
+                        type="text"
+                        aria-label="search"
+                        className="searchName"
                     />
                 </Search>
-                <Box sx={{width:"400px"}}>
+                <SyncAltIcon sx={{ fontSize: "40px" }} />
+                <Box sx={{ width: "400px" }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="selected date "  sx={{width:"400px"}} />
-
+                        <DatePicker label="Date de départ" sx={{ width: "400px" }} />
                     </LocalizationProvider>
                 </Box>
-               
                 <Box>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker label="selected date "  sx={{width:"400px"}} />
-
+                        <DatePicker label="Date de retour" sx={{ width: "400px" }} />
                     </LocalizationProvider>
                 </Box>
             </Box>
         </Box>
-    )
+    );
 }
 
-export default Vols
+export default Vols;

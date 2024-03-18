@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require("dotenv").config(); // environment variable
-
+const amadeus = require('amadeus'); // Assurez-vous d'avoir importé le module Amadeus si ce n'est pas déjà fait
 const userRoutes = require('./routes/user');
 const apiRoutes  = require('./routes/api'); // Assurez-vous que vous utilisez également apiRoutes
 

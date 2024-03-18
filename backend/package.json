@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amadeus": "^9.1.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",

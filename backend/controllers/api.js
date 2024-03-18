@@ -1,7 +1,34 @@
 const axios = require("axios");
-const config = require('../config/config');
-const clientID = config.CLIENT_ID;
-const clientSecret = config.CLIENT_SECRET;
+const Amadeus = require('amadeus'); // Importez la classe Amadeus
+const clientID = "6Y4vUsa5Ljk4F6Rfpi6jaaURyZNuE8m4";
+const clientSecret = "tXszT7d9Ur5Xlp4A";
+// Créez une instance Amadeus avec les identifiants en dur
+const amadeus = new Amadeus({
+    clientId: clientID,
+    clientSecret: clientSecret
+});
+
+// Fonction pour gérer les requêtes de saisie semi-automatique d'aéroports
+exports.getApiAirport = async (req, res, next) => {
+    try {
+        // Vérifiez si le paramètre 'term' est présent dans la requête
+        const term = req.query.term;
+        if (!term) {
+            return res.status(400).json({ error: "Le paramètre 'term' est manquant dans la requête." });
+        }
+
+        // Effectuer la requête vers Amadeus avec le paramètre 'keyword'
+        const response = await amadeus.referenceData.locations.get({
+            keyword: term, // Utilisez la valeur du paramètre 'term' pour le paramètre 'keyword'
+            subType: 'AIRPORT,CITY'
+        });
+        res.json(response.data);
+        console.log(response.data.iataCode);
+    } catch (error) {
+        console.error("Erreur lors de la recherche d'aéroports:", error);
+        res.status(500).json({ error: "Une erreur s'est produite lors de la recherche d'aéroports." });
+    }
+};
 
 // Endpoint pour la fonctionnalité "sleep"
 exports.getApiSleep = async (req, res, next) => {
@@ -54,6 +81,28 @@ exports.getApiEnjoy = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Erreur lors de la récupération des activités'); // En cas d'erreur, renvoyer une réponse d'erreur
+    }
+};
+
+
+// Fonction pour gérer les requêtes de saisie semi-automatique d'aéroports
+exports.getApiAirport = async (req, res, next) => {
+    try {
+
+        // Vos identifiants Amadeus
+        const clientID = '6Y4vUsa5Ljk4F6Rfpi6jaaURyZNuE8m4'; // Remplacez par votre client ID Amadeus
+        const clientSecret = 'tXszT7d9Ur5Xlp4A'; // Remplacez par votre client secret Amadeus
+
+
+        const response = await amadeus.referenceData.locations.get({
+            keyword: req.query.term,
+            subType: 'AIRPORT,CITY'
+        });
+        res.json(response.data);
+        console.log(response.data.iataCode);
+    } catch (error) {
+        console.error("Erreur lors de la recherche d'aéroports:", error);
+        res.status(500).json({ error: "Une erreur s'est produite lors de la recherche d'aéroports." });
     }
 };
 
