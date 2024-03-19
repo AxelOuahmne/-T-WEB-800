@@ -18,6 +18,11 @@ $(function(){
                     console.log(err.status);
                 }
             });
+        },
+        select: function(event, ui) {
+            // Extraire la valeur IATA de l'élément sélectionné
+            const selectedIata = ui.item.value;
+            console.log('Code IATA sélectionné:', selectedIata);
         }
     });
 });
