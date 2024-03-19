@@ -27,18 +27,38 @@ const Hotels = () => {
     const [arrivalDate, setArrivalDate] = useState(null);
     const [departureDate, setDepartureDate] = useState(null);
 
-    useEffect(() => {
-        // Charger le script d'autocomplétion ici
-        const script = document.createElement("script");
-        script.src = "/autocomplete.js";
-        script.async = true;
-        document.body.appendChild(script);
+    const [originIata, setOriginIata] = useState('');
+    const [destinationIata, setDestinationIata] = useState('');
 
-        // Nettoyer le script lors du démontage du composant
-        return () => {
-            document.body.removeChild(script);
-        };
-    }, []);
+    useEffect(() => {
+        // Fonction d'autocomplétion pour le champ de destination
+        $('.destinationSearch').autocomplete({
+            source: function(req, res) {
+                $.ajax({
+                    url: "http://localhost:3000/api/airport",
+                    dataType: "json",
+                    type: "GET",
+                    data: req,
+                    success: function(data) {
+                        res($.map(data, function(el) {
+                            return {
+                                label: el.address.cityName + ' (' + el.iataCode + ')',
+                                value: el.iataCode
+                            };
+                        }));
+                    },
+                    error: function(err) {
+                        console.log(err.status);
+                    }
+                });
+            },
+            select: function(event, ui) {
+                const selectedIata = ui.item.value;
+                console.log('Code IATA sélectionné (Destination):', selectedIata);
+                setDestinationIata(selectedIata);
+            }
+        });
+    }, []); // Utilisez un tableau vide pour exécuter useEffect une seule fois lors du montage
 
     const handleSearch = () => {
         // Effectuer la requête POST vers le backend avec les données des champs
@@ -76,7 +96,7 @@ const Hotels = () => {
                         placeholder="Choisir sa destination ..."
                         type="text"
                         aria-label="search"
-                        className="searchName"
+                        className="searchName destinationSearch"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
                     />
