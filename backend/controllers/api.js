@@ -127,13 +127,51 @@ exports.getApiTravel = async (req, res, next) => {
 };
 
 // Endpoint pour la fonctionnalité "eat"
-exports.getApiEat = async (req, res, next) => {
+exports.getApiEatDrinks = async (req, res, next) => {
     try {
-        // Logique pour récupérer et renvoyer les restaurants disponibles
-        const response = await axios.get('URL_API_POUR_RESTAURANTS');
+        const location = req.body.location
+        const clientID = '6Y4vUsa5Ljk4F6Rfpi6jaaURyZNuE8m4'; // Remplacez par votre client ID Amadeus
+        const clientSecret = 'tXszT7d9Ur5Xlp4A'; // Remplacez par votre client secret Amadeus
 
-        // Renvoyer les données récupérées en tant que réponse
-        res.json(response.data);
+        const tokenResponse = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', `grant_type=client_credentials&client_id=${clientID}&client_secret=${clientSecret}`, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+        
+        // Extraire le jeton d'accès de la réponse
+        const accessToken = tokenResponse.data.access_token;
+
+        // get latitude and longtitude from address
+        const url = `https://geocode.maps.co/search?q=${location}&api_key=65f85c1008e38545180841bag1e79bd`
+        
+        
+        await axios.get(url)
+            .then(async response => {
+                
+                const categories = req.body.category
+                const latitude = response.data[0].lat
+                const longitude =response.data[0].lon
+                const radius = req.body.radius
+                
+                // Logique pour récupérer et renvoyer les restaurants ou les bars disponibles
+                const responsee = await axios.get(`https://test.api.amadeus.com/v1/reference-data/locations/pois?categories=${categories}&latitude=${latitude}&longitude=${longitude}&radius=${radius}`,{
+                
+                    headers: {
+                        'Accept': '*/*',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                // Renvoyer les données récupérées en tant que réponse
+                if (responsee.status === 200) {
+                    console.log(responsee.data); // Affiche la réponse de l'API dans la console
+                    res.json(responsee.data);
+                } else {
+                    console.error(`Erreur lors de la récupération des hébergements: ${responsee.statusText}`);
+                    res.status(responsee.status).send('Erreur lors de la récupération des hébergements');
+                }
+            })
+
     } catch (error) {
         console.error(error);
         res.status(500).send('Erreur lors de la récupération des restaurants'); // En cas d'erreur, renvoyer une réponse d'erreur
@@ -143,11 +181,49 @@ exports.getApiEat = async (req, res, next) => {
 // Endpoint pour la fonctionnalité "drink"
 exports.getApiDrink = async (req, res, next) => {
     try {
-        // Logique pour récupérer et renvoyer les bars disponibles
-        const response = await axios.get('URL_API_POUR_BARS');
+
+        const clientID = '6Y4vUsa5Ljk4F6Rfpi6jaaURyZNuE8m4'; // Remplacez par votre client ID Amadeus
+        const clientSecret = 'tXszT7d9Ur5Xlp4A'; // Remplacez par votre client secret Amadeus
+
+        const tokenResponse = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', `grant_type=client_credentials&client_id=${clientID}&client_secret=${clientSecret}`, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+        
+        // Extraire le jeton d'accès de la réponse
+        const accessToken = tokenResponse.data.access_token;
+
+        // get latitude and longtitude from address
+        const url = `https://geocode.maps.co/search?q=${location}&api_key=65f85c1008e38545180841bag1e79bd`
+        
+        
+        await axios.get(url)
+            .then(async response => {
+                const categories = ["BARS","NIGHTLIFE"]
+                const latitude = response.data[0].lat
+                const longitude =response.data[0].lon
+                const radius = req.body.radius
+                // Logique pour récupérer et renvoyer les restaurants disponibles
+                const responsee = await axios.get(`https://test.api.amadeus.com/v1/reference-data/locations/pois?categories=${categories}&latitude=${latitude}&longitude=${longitude}&radius=${radius}`,{
+                  
+                    headers: {
+                        'Accept': '*/*',
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                if (responsee.status === 200) {
+                    console.log(responsee.data); // Affiche la réponse de l'API dans la console
+                    res.json(responsee.data);
+                } else {
+                    console.error(`Erreur lors de la récupération des hébergements: ${responsee.statusText}`);
+                    res.status(responsee.status).send('Erreur lors de la récupération des hébergements');
+                }
+            })
+        
 
         // Renvoyer les données récupérées en tant que réponse
-        res.json(response.data);
+        //res.json(responsee.data);
     } catch (error) {
         console.error(error);
         res.status(500).send('Erreur lors de la récupération des bars'); // En cas d'erreur, renvoyer une réponse d'erreur
