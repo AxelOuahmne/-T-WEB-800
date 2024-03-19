@@ -3,7 +3,7 @@ const router = express.Router();
 
 const apiCtrl = require("../controllers/api");
 
-router.get("/sleep", apiCtrl.getApiSleep);
+router.post("/sleep", apiCtrl.getApiSleep);
 router.get("/enjoy", apiCtrl.getApiEnjoy);
 router.post("/travel", apiCtrl.getApiTravel);
 router.get("/airport", apiCtrl.getApiAirport);

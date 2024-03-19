@@ -7,33 +7,32 @@ const amadeus = new Amadeus({
     clientSecret: config.CLIENT_SECRET
 });
 
-// Endpoint pour la fonctionnalité "sleep"
 exports.getApiSleep = async (req, res, next) => {
     try {
+        console.log("la requete est dnen : ",req.body.destination);
         // Vos identifiants Amadeus
         const clientID = '6Y4vUsa5Ljk4F6Rfpi6jaaURyZNuE8m4'; // Remplacez par votre client ID Amadeus
         const clientSecret = 'tXszT7d9Ur5Xlp4A'; // Remplacez par votre client secret Amadeus
-
+        // Récupérer les données envoyées dans le corps de la requête POST
+        const cityCode = req.body.destination;
+        if (!cityCode) {
+            return res.status(400).send('Le code de la ville est manquant dans la requête.');
+        }
         // Obtenir le jeton d'accès
         const tokenResponse = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', `grant_type=client_credentials&client_id=${clientID}&client_secret=${clientSecret}`, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-
         // Extraire le jeton d'accès de la réponse
         const accessToken = tokenResponse.data.access_token;
-
         // Utiliser le jeton d'accès pour authentifier la requête vers l'API Amadeus pour rechercher des hôtels
-        const url = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city`;
-
+        const url = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=${cityCode}`;
         const response = await axios.get(url, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
-
-
         if (response.status === 200) {
             console.log(response.data); // Affiche la réponse de l'API dans la console
             res.json(response.data);

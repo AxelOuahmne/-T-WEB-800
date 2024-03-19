@@ -73,7 +73,7 @@ function SaidBar({open,handleDrawerClose}) {
     ]
     const Array2 =[
         {"text":"Vols","icon":<FlightIcon/>,"path":"/vols"},
-        {"text":"Hébergements","icon":<KingBedIcon/>,"path":"/hebergements"},
+        {"text":"Hébergements","icon":<KingBedIcon/>,"path":"/hotels"},
         {"text":"Voitures","icon":<ElectricCarIcon/>,"path":"/cars"}, 
         {"text":"Vols+Hôtels","icon":<BeachAccessIcon/>,"path":"/vols&hotels"}, 
     ]
