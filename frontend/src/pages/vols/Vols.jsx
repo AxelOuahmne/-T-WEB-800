@@ -8,6 +8,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { formatISO } from 'date-fns';
+import FlightList from './FlightList';
+import Json from "qs";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -40,6 +42,7 @@ const Vols = () => {
     const [departureDate, setDepartureDate] = useState(null); // État pour stocker la date de départ
     const [returnDate, setReturnDate] = useState(null); // État pour stocker la date de retour
     const [numberOfAdults, setNumberOfAdults] = useState(1); // État pour stocker le nombre de voyageurs adultes
+    const [flightResults, setFlightResults] = useState([]);
 
     useEffect(() => {
         // Fonction d'autocomplétion pour le champ d'origine
@@ -126,6 +129,7 @@ const Vols = () => {
             .then(response => response.json())
             .then(data => {
                 console.log("Réponse du back-end:", data);
+                setFlightResults(data);
             })
             .catch(error => {
                 console.error("Erreur lors de l'envoi des données au back-end:", error);
@@ -194,6 +198,20 @@ const Vols = () => {
                 </Box>
                 <Button variant="contained" onClick={handleSearch}>Rechercher</Button>
             </Box>
+            {console.log((flightResults.data))}
+            <Box sx={{ marginTop: "20px" }}>
+                {flightResults && flightResults.data ? (
+                    flightResults.data.map((flight, index) => (
+                        <p key={index}>{flight.id}</p>
+                    ))
+                ) : (
+                    <p>Les résultats de vol sont indisponibles.</p>
+                )}
+            </Box>
+
+
+
+
         </Box>
     );
 }
