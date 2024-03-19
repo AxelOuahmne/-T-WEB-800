@@ -12,7 +12,7 @@ import Vols from './pages/vols/Vols.jsx';
 import SignUp from './pages/auth/SignUp.jsx';
 import Login from './pages/auth/Login.jsx';
 import {AuthContextProvaider}  from './context/AuthContext';
-import Hebergements from './pages/vols/Hebergements/Hebergements.jsx';
+import Hotels from "./pages/hotels/Hotels.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +20,7 @@ const router = createBrowserRouter(
     <Route path="/vols" element={<Vols />} />
     <Route path="/Login" element={<Login />} />
     <Route path="/signup" element={<SignUp />} />
-    <Route path='/hebergements' element={<Hebergements/>} />
+    <Route path='/hotels' element={<Hotels />} />
       {/* ... etc. */}
     </Route>
   )
