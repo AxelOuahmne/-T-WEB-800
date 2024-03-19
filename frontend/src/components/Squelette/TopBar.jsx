@@ -8,6 +8,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from "../../assets/Kayak-logo-2.png"
 import CustomizedMenus from "./Menu";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 const drawerWidth = 240;
 
 
@@ -74,6 +75,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
   const theme = useTheme();
 
   const {user} = useAuthContext();
+  const navigate = useNavigate();
   return (
     <>
 
@@ -123,7 +125,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
             <IconButton color="inherit">
               <FavoriteIcon />  
             </IconButton>
-            {!user&&(<Button variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
+            {!user&&(<Button onClick={()=>{navigate('/login')}} variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
             Connexion
             </Button>)}
             {user&&(<CustomizedMenus user={user.user.nom}/>)}
