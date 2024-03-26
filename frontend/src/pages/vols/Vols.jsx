@@ -8,10 +8,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { formatISO } from 'date-fns';
-
-import axios from 'axios';
+<<<<<<< HEAD
+import axios from 'axios'; 
 import TextField from '@mui/material/TextField';
 import ComboBox from "./ComboBox";
+
+=======
+import FlightList from './FlightList';
+>>>>>>> 17841222c410532c23d495e4c8a648b7e8b5dd2a
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
