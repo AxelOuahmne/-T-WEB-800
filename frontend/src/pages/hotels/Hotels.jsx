@@ -62,18 +62,20 @@ const Hotels = () => {
 
     const handleSearch = () => {
         // Effectuer la requête POST vers le backend avec les données des champs
-        fetch('http://localhost:3000/api/sleep', { // Ajoutez le protocole (http://) devant localhost
+        fetch('http://localhost:3000/api/sleep2', { // Ajoutez le protocole (http://) devant localhost
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                destination: destination,
+                location: destination,
                 arrivalDate: arrivalDate,
                 departureDate: departureDate,
             }),
         })
             .then(response => {
+                response.json().then(data => {
+                    console.log('Requête POST envoyée avec succès :', data.data);});
                 if (!response.ok) {
                     throw new Error('La requête a échoué.');
                 }
@@ -96,7 +98,7 @@ const Hotels = () => {
                         placeholder="Choisir sa destination ..."
                         type="text"
                         aria-label="search"
-                        className="searchName destinationSearch"
+                        className="searchName"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
                     />
