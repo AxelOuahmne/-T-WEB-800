@@ -8,7 +8,7 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import Vols from './pages/vols/Vols1.jsx';
+import Vols from './pages/vols/Vols.jsx';
 import SignUp from './pages/auth/SignUp.jsx';
 import Login from './pages/auth/Login.jsx';
 import {AuthContextProvaider}  from './context/AuthContext';

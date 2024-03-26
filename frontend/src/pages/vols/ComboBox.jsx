@@ -30,19 +30,22 @@ export default function ComboBox({ dis, setDis }) {
       fetchData();
     }
   }, [searchTerm]);
-
+console.log(airports)
+const airportsIataCodes = airports.map((airport) => airport.iataCode);
   return (
+   
     <Autocomplete
       disablePortal
       id="combo-box-demo"
       options={airports.map((airport) => ({ 
+        
         label: `${airport.address.cityName} (${airport.iataCode})`, 
         value: airport.iataCode,
         countryCode: airport.address.countryCode,
         key: airport.id // Utilisation de l'index comme clé unique
       }))}
       sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="Aéroport" onChange={(event) => setDis(event.target.value)} />}
+      renderInput={(params) => <TextField {...params} label="Aéroport" onChange={(event) => setDis(event.target.value)}  />}
       renderOption={(props, option) => (
         <li key={option.value}  {...props}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -52,6 +55,7 @@ export default function ComboBox({ dis, setDis }) {
         </li>
       )}
     />
+    
   );
 }
 
