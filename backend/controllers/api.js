@@ -96,6 +96,7 @@ exports.getApiHotelValidate = async (req, res, next) => {
   }
 };
 
+
 // Endpoint pour la fonctionnalité "enjoy"
 exports.getApiEnjoy = async (req, res, next) => {
   try {

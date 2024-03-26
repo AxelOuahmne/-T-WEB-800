@@ -128,7 +128,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
             {!user&&(<Button onClick={()=>{navigate('/login')}} variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
             Connexion
             </Button>)}
-            {user&&(<CustomizedMenus user={user.user.nom}/>)}
+            {user&&(<CustomizedMenus user={user.nom}/>)}
 
           </Stack>
 
