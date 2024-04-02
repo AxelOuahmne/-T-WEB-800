@@ -1,11 +1,11 @@
-import styled from "@emotion/styled";
-import { Box, alpha, Button } from "@mui/material";
+import React, { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useEffect, useState } from "react";
+import { Button, Box, alpha } from "@mui/material";
+import styled from "@emotion/styled";
+import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 
-// Le reste du code reste inchangé...
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -27,38 +27,20 @@ const Hotels = () => {
     const [arrivalDate, setArrivalDate] = useState(null);
     const [departureDate, setDepartureDate] = useState(null);
 
-    const [originIata, setOriginIata] = useState('');
-    const [destinationIata, setDestinationIata] = useState('');
-
     useEffect(() => {
-        // Fonction d'autocomplétion pour le champ de destination
-        $('.destinationSearch').autocomplete({
-            source: function(req, res) {
-                $.ajax({
-                    url: "http://localhost:3000/api/airport",
-                    dataType: "json",
-                    type: "GET",
-                    data: req,
-                    success: function(data) {
-                        res($.map(data, function(el) {
-                            return {
-                                label: el.address.cityName + ' (' + el.iataCode + ')',
-                                value: el.iataCode
-                            };
-                        }));
-                    },
-                    error: function(err) {
-                        console.log(err.status);
-                    }
-                });
-            },
-            select: function(event, ui) {
-                const selectedIata = ui.item.value;
-                console.log('Code IATA sélectionné (Destination):', selectedIata);
-                setDestinationIata(selectedIata);
-            }
-        });
-    }, []); // Utilisez un tableau vide pour exécuter useEffect une seule fois lors du montage
+        const handlePlaceSelect = () => {
+            const selectedPlace = autocomplete.getPlace();
+            console.log('Adresse sélectionnée:', selectedPlace);
+            setDestination(selectedPlace.formatted_address);
+        };
+
+        const autocomplete = new window.google.maps.places.Autocomplete(
+            document.getElementById('autocomplete'),
+            { types: ['geocode'] }
+        );
+
+        autocomplete.addListener('place_changed', handlePlaceSelect);
+    }, []);
 
     const handleSearch = () => {
         // Effectuer la requête POST vers le backend avec les données des champs
@@ -87,7 +69,6 @@ const Hotels = () => {
             });
     };
 
-
     return (
         <Box>
             <h1>Où voulez-vous séjourner ?</h1>
@@ -95,6 +76,7 @@ const Hotels = () => {
                 {/* Premier champ */}
                 <Search style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
                     <input
+                        id="autocomplete"
                         placeholder="Choisir sa destination ..."
                         type="text"
                         aria-label="search"
@@ -128,6 +110,6 @@ const Hotels = () => {
             </Box>
         </Box>
     );
-}
+};
 
 export default Hotels;
