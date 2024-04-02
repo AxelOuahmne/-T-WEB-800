@@ -36,7 +36,7 @@ const Hotels = () => {
 
         const autocomplete = new window.google.maps.places.Autocomplete(
             document.getElementById('autocomplete'),
-            { types: ['geocode'] }
+            { types: ['geocode','establishment'] }
         );
 
         autocomplete.addListener('place_changed', handlePlaceSelect);
@@ -74,7 +74,7 @@ const Hotels = () => {
             <h1>Où voulez-vous séjourner ?</h1>
             <Box sx={{ display: "flex", justifyContent: "center", gap: "20px" }}>
                 {/* Premier champ */}
-                <Search style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
+                <Search style={{ width: "600px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
                     <input
                         id="autocomplete"
                         placeholder="Choisir sa destination ..."
@@ -83,6 +83,7 @@ const Hotels = () => {
                         className="searchName"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
+                        style={{ width: "100%" }} // Ajustez la largeur de l'input
                     />
                 </Search>
                 <Box sx={{ width: "400px" }}>
