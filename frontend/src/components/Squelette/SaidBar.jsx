@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Avatar, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, styled ,useTheme} from '@mui/material'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -78,7 +80,7 @@ function SaidBar({open,handleDrawerClose}) {
         {"text":"Vols+Hôtels","icon":<BeachAccessIcon/>,"path":"/vols&hotels"}, 
     ]
     const Array3 =[
-        {"text":"Explore","icon":<TravelExploreIcon/>,"path":"/Explore"},
+        {"text":"Explore","icon":<TravelExploreIcon/>,"path":"/maps"},
         {"text":"Conseils de voyage","icon":<FeedIcon/>,"path":"/Conseils-de-voyage"},
         {"text":"Vols directs","icon":<FirstPageIcon/>,"path":"/cars"}, 
         {"text":"Meilleur moment pour voyager","icon":<AccessTimeFilledIcon/>,"path":"/Meilleur-moment-pour-voyager"}, 

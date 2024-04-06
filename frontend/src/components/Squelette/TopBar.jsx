@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Box, Button, IconButton, InputBase, Stack, Toolbar, alpha, styled, useTheme } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import MuiAppBar from '@mui/material/AppBar';

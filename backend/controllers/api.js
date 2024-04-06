@@ -81,7 +81,7 @@ exports.getApiHotelValidate = async (req, res, next) => {
     const accessToken = await amadeusServices.tokenAccessAmadeus();
     // Utiliser le jeton d'accès pour authentifier la requête vers l'API Amadeus pour rechercher des hôtels
     //const url           = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${idHotel}&adults=${nbAdult}&checkInDate=${checkIn}&checkOutDate=${checkOut}&roomQuantity=${qttRoom}&paymentPolicy=NONE&bestRateOnly=true`;
-    const Endpoint = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=MCLONGHM&adults=1&checkInDate=2024-03-26&checkOutDate=2024-03-27&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`;
+    const Endpoint = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=MCPARDTM&adults=1&checkInDate=2024-04-26&checkOutDate=2024-04-27&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`;
     const message = "Erreur lors de la récupération des hotels";
     const responsee = await amadeusServices.tokenApisCall(
       Endpoint,

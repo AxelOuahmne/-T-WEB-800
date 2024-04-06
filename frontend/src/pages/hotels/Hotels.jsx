@@ -1,11 +1,14 @@
-import styled from "@emotion/styled";
-import { Box, alpha, Button } from "@mui/material";
+import React from 'react';
+
+import { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useEffect, useState } from "react";
+import { Button, Box, alpha, Stack } from "@mui/material";
+import styled from "@emotion/styled";
+import RecipeReviewCard from './RecipeReviewCard';
+// import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 
-// Le reste du code reste inchangé...
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -26,54 +29,42 @@ const Hotels = () => {
     const [destination, setDestination] = useState("");
     const [arrivalDate, setArrivalDate] = useState(null);
     const [departureDate, setDepartureDate] = useState(null);
-
-    const [originIata, setOriginIata] = useState('');
-    const [destinationIata, setDestinationIata] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
-        // Fonction d'autocomplétion pour le champ de destination
-        $('.destinationSearch').autocomplete({
-            source: function(req, res) {
-                $.ajax({
-                    url: "http://localhost:3000/api/airport",
-                    dataType: "json",
-                    type: "GET",
-                    data: req,
-                    success: function(data) {
-                        res($.map(data, function(el) {
-                            return {
-                                label: el.address.cityName + ' (' + el.iataCode + ')',
-                                value: el.iataCode
-                            };
-                        }));
-                    },
-                    error: function(err) {
-                        console.log(err.status);
-                    }
-                });
-            },
-            select: function(event, ui) {
-                const selectedIata = ui.item.value;
-                console.log('Code IATA sélectionné (Destination):', selectedIata);
-                setDestinationIata(selectedIata);
-            }
-        });
-    }, []); // Utilisez un tableau vide pour exécuter useEffect une seule fois lors du montage
+        const handlePlaceSelect = () => {
+            const selectedPlace = autocomplete.getPlace();
+            console.log('Adresse sélectionnée:', selectedPlace);
+            setDestination(selectedPlace.formatted_address);
+        };
+
+        const autocomplete = new window.google.maps.places.Autocomplete(
+            document.getElementById('autocomplete'),
+            { types: ['geocode', 'establishment'] }
+        );
+
+        autocomplete.addListener('place_changed', handlePlaceSelect);
+    }, []);
 
     const handleSearch = () => {
         // Effectuer la requête POST vers le backend avec les données des champs
-        fetch('http://localhost:3000/api/sleep', { // Ajoutez le protocole (http://) devant localhost
+        fetch('http://localhost:3000/api/sleep2', { // Ajoutez le protocole (http://) devant localhost
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                destination: destination,
+                location: destination,
                 arrivalDate: arrivalDate,
                 departureDate: departureDate,
             }),
         })
             .then(response => {
+                response.json().then(data => {
+                    console.log('Requête POST envoyée avec succès :', data.data);
+                    setSearchResults(data.data);
+                });
+
                 if (!response.ok) {
                     throw new Error('La requête a échoué.');
                 }
@@ -85,20 +76,37 @@ const Hotels = () => {
             });
     };
 
+    const getCountryName = async (countryCode) => {
+        try {
+            const response = await fetch(`https://restcountries.com/v3/alpha/${countryCode}`);
+            if (!response.ok) {
+                throw new Error('La requête a échoué.');
+            }
+            const data = await response.json();
+            console.log("data.name.common", data.name.common);
+            return data.name.common;
+        } catch (error) {
+            console.error('Erreur lors de la récupération du nom du pays:', error);
+            return "Pays Inconnu";
+        }
+    };
 
     return (
+
         <Box>
             <h1>Où voulez-vous séjourner ?</h1>
             <Box sx={{ display: "flex", justifyContent: "center", gap: "20px" }}>
                 {/* Premier champ */}
-                <Search style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
+                <Search style={{ width: "600px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
                     <input
+                        id="autocomplete"
                         placeholder="Choisir sa destination ..."
                         type="text"
                         aria-label="search"
-                        className="searchName destinationSearch"
+                        className="searchName"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
+                        style={{ width: "100%" }} // Ajustez la largeur de l'input
                     />
                 </Search>
                 <Box sx={{ width: "400px" }}>
@@ -124,8 +132,18 @@ const Hotels = () => {
                 {/* Bouton Rechercher */}
                 <Button variant="contained" onClick={handleSearch}>Rechercher</Button>
             </Box>
+
+        <Box sx={{marginTop:"70px"}}>
+        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" sx={{marginTop:"30px"}}>
+                {searchResults.map((result, index) => (
+                    <div key={index}>
+                        <RecipeReviewCard hotel={result} />
+                    </div>
+                ))}
+            </Stack>
+        </Box>
         </Box>
     );
-}
+};
 
 export default Hotels;

@@ -13,6 +13,7 @@ import SignUp from './pages/auth/SignUp.jsx';
 import Login from './pages/auth/Login.jsx';
 import {AuthContextProvaider}  from './context/AuthContext';
 import Hotels from "./pages/hotels/Hotels.jsx";
+import Maps from "./pages/maps/Maps.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
     <Route path="/Login" element={<Login />} />
     <Route path="/signup" element={<SignUp />} />
     <Route path='/hotels' element={<Hotels />} />
+    <Route path='/maps' element={<Maps />} />
       {/* ... etc. */}
     </Route>
   )
