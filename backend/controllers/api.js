@@ -95,7 +95,34 @@ exports.getApiHotelValidate = async (req, res, next) => {
     res.status(500).send("Erreur lors de la récupération des hébergements"); // En cas d'erreur, renvoyer une réponse d'erreur
   }
 };
+exports.getApiHotelValidate2 = async (req, res, next) => {
+  try {
+    console.log("la requete est dnen : ", req.body.destination);
 
+    // //Mes variables
+    // const idHotel = req.body.idHotel ? req.body.idHotel : "MCLONGHM";
+    // const nbAdult = req.body.nbAdult ? req.body.nbAdult : 1;
+    // const checkIn = req.body.checkIn ? req.body.checkIn : "";
+    // const checkOut = req.body.checkOut ? req.body.checkOut : "";
+    // const qttRoom = req.body.qttRoom ? req.body.qttRoom : 1;
+    // Vos identifiants Amadeus
+    const accessToken = await amadeusServices.tokenAccessAmadeus();
+    // Utiliser le jeton d'accès pour authentifier la requête vers l'API Amadeus pour rechercher des hôtels
+    //const url           = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${idHotel}&adults=${nbAdult}&checkInDate=${checkIn}&checkOutDate=${checkOut}&roomQuantity=${qttRoom}&paymentPolicy=NONE&bestRateOnly=true`;
+    const Endpoint = `https://test.api.amadeus.com/v2/shopping/hotel-offers?cityCode=LON&checkInDate=2024-04-06&checkOutDate=2024-04-15`;
+    const message = "Erreur lors de la récupération des hotels";
+    const responsee = await amadeusServices.tokenApisCall(
+      Endpoint,
+      message,
+      accessToken
+    );
+
+    res.json(responsee.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erreur lors de la récupération des hébergements"); // En cas d'erreur, renvoyer une réponse d'erreur
+  }
+};
 
 // Endpoint pour la fonctionnalité "enjoy"
 exports.getApiEnjoy = async (req, res, next) => {

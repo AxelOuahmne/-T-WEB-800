@@ -10,7 +10,7 @@ router.post("/sleep3", apiCtrl.getApiHotelValidate);
 router.post("/travel", apiCtrl.getApiTravel);
 router.get("/airport", apiCtrl.getApiAirport);
 router.get("/eat", apiCtrl.getApiEatDrinks);
-//router.get("/drink", apiCtrl.getApiEatDrinks);
+router.get("/sleep4", apiCtrl.getApiHotelValidate2);
 
 //router.get("/:id", apiCtrl.getApiId);
 
