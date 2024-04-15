@@ -6,6 +6,8 @@ const amadeus = require('amadeus'); // Assurez-vous d'avoir importé le module A
 const userRoutes = require('./routes/user');
 const apiRoutes  = require('./routes/api'); // Assurez-vous que vous utilisez également apiRoutes
 
+const swaggerUI = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 // Connexion à la base de données MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -30,5 +32,7 @@ app.use(bodyParser.json());
 
 app.use('/api/auth', userRoutes);
 app.use('/api', apiRoutes); // Assurez-vous que vous utilisez également apiRoutes
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
 
 module.exports = app;
