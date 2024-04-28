@@ -76,20 +76,7 @@ const Hotels = () => {
             });
     };
 
-    const getCountryName = async (countryCode) => {
-        try {
-            const response = await fetch(`https://restcountries.com/v3/alpha/${countryCode}`);
-            if (!response.ok) {
-                throw new Error('La requête a échoué.');
-            }
-            const data = await response.json();
-            console.log("data.name.common", data.name.common);
-            return data.name.common;
-        } catch (error) {
-            console.error('Erreur lors de la récupération du nom du pays:', error);
-            return "Pays Inconnu";
-        }
-    };
+  
 
     return (
 

@@ -19,6 +19,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import CommentIcon from '@mui/icons-material/Comment';
 import CookieIcon from '@mui/icons-material/Cookie';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 const drawerWidth = 240;
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -78,6 +79,7 @@ function SaidBar({open,handleDrawerClose}) {
         {"text":"Hébergements","icon":<KingBedIcon/>,"path":"/hotels"},
         {"text":"Voitures","icon":<ElectricCarIcon/>,"path":"/cars"}, 
         {"text":"Vols+Hôtels","icon":<BeachAccessIcon/>,"path":"/vols&hotels"}, 
+        {"text":"Explore","icon":<MapsHomeWorkIcon/>,"path":"/allMaps"},
     ]
     const Array3 =[
         {"text":"Explore","icon":<TravelExploreIcon/>,"path":"/maps"},
