@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -76,7 +75,7 @@ const Hotels = () => {
             });
     };
 
-  
+
 
     return (
 
@@ -120,15 +119,15 @@ const Hotels = () => {
                 <Button variant="contained" onClick={handleSearch}>Rechercher</Button>
             </Box>
 
-        <Box sx={{marginTop:"70px"}}>
-        <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" sx={{marginTop:"30px"}}>
-                {searchResults.map((result, index) => (
-                    <div key={index}>
-                        <RecipeReviewCard hotel={result} />
-                    </div>
-                ))}
-            </Stack>
-        </Box>
+            <Box sx={{marginTop:"70px"}}>
+                <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" sx={{marginTop:"30px"}}>
+                    {searchResults.map((result, index) => (
+                        <div key={index}>
+                            <RecipeReviewCard hotel={result} />
+                        </div>
+                    ))}
+                </Stack>
+            </Box>
         </Box>
     );
 };

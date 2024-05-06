@@ -21,14 +21,16 @@ const Maps = () => {
     const handlePlaceSelect = (place) => {
         console.log('Adresse sélectionnée:', place);
         setDestination(place.formatted_address);
+        setDirections(null); // Réinitialiser les directions précédentes
     };
 
     const handleMapClick = (e) => {
         console.log('Coordonnées du clic:', e.latLng);
-        setEndLocation({
+        setStartLocation({
             lat: e.latLng.lat(),
             lng: e.latLng.lng()
         });
+        setDirections(null); // Réinitialiser les directions précédentes
     };
 
     const onDirectionsLoad = (directions) => {
@@ -75,9 +77,20 @@ const Maps = () => {
                     {startLocation && <Marker position={startLocation} />}
 
                     {/* Affichage du marqueur pour le point d'arrivée */}
-                    {endLocation && <Marker position={endLocation} />}
+                    {destination && <Marker position={center} />}
 
                     {/* Affichage du trajet */}
+                    {startLocation && destination && (
+                        <DirectionsService
+                            options={{
+                                destination: destination,
+                                origin: startLocation,
+                                travelMode: 'DRIVING'
+                            }}
+                            callback={onDirectionsLoad}
+                        />
+                    )}
+
                     {directions && <DirectionsRenderer directions={directions} onLoad={onDirectionsLoad} />}
                 </GoogleMap>
         </Box>

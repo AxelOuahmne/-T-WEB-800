@@ -220,18 +220,21 @@ const Vols = () => {
                                 <Grid item xs={10} sx={{ borderRight: 1, padding: "50px 0px" }}>
                                     <Box sx={{ display: "flex", flexDirection: "column", padding: "20px 20px 0px 20px" }}>
                                         <Box sx={{ display: "flex", justifyContent: " space-between" }}>
-                                            <h2>Vol {index + 1}</h2>
                                             <p>Aéroport de départ : {flight.itineraries[0].segments[0].departure.iataCode}</p>
-                                            <p>Aéroport d'arrivée : {flight.itineraries[flight.itineraries.length - 1].segments[flight.itineraries[flight.itineraries.length - 1].segments.length - 1].arrival.iataCode}</p>
+                                            <p>Aéroport d'arrivée : {flight.itineraries[0].segments[0].arrival.iataCode}</p>
                                             <p>Date de départ : {new Date(flight.itineraries[0].segments[0].departure.at).toLocaleDateString()}</p>
                                             <p>Date d'arrivée : {new Date(flight.itineraries[flight.itineraries.length - 1].segments[flight.itineraries[flight.itineraries.length - 1].segments.length - 1].arrival.at).toLocaleDateString()}</p>
 
                                             {flight.itineraries.map((itinerary, i) => (
                                                 <div key={i}>
-                                                    <p>Itinéraire {i + 1}</p>
+                                                    <p>{i === 0 ? "Aller" : "Retour"}</p>
                                                     <p>Heure de départ : {itinerary.segments[0].departure.at.split('T')[1]}</p>
                                                     <p>Heure d'arrivée : {itinerary.segments[itinerary.segments.length - 1].arrival.at.split('T')[1]}</p>
-                                                    {/* <p>Date de départ : {itinerary.segments[0].departure.at}</p>
+                                                    {/* Autres détails de l'itinéraire */}
+                                                </div>
+                                            ))}
+
+                                            {/* <p>Date de départ : {itinerary.segments[0].departure.at}</p>
                                                     <p>Aéroport de départ : {itinerary.segments[0].departure.iataCode}</p>
                                                     <p>Heure de départ : {itinerary.segments[0].departure.at.split('T')[1]}</p>
                                                     <p>Date d'arrivée : {itinerary.segments[itinerary.segments.length - 1].arrival.at}</p>
@@ -241,24 +244,17 @@ const Vols = () => {
                                                     <Typography>Itinéraire  {i + 1} </Typography>
                                                     <Typography>Durée: {convertirDuree(itinerary.duration)}</Typography> */}
                                                     {/* Vous pouvez ajouter d'autres informations spécifiques à l'itinéraire ici */}
-                                                </div>
-                                            ))}
-                                            {flight.travelerPricings.map((pricing, i) => (
+                                            {/*{flight.travelerPricings.map((pricing, i) => (
                                                 <div key={i}>
                                                     <Typography>
                                                         Nombre d'escales : {pricing.fareDetailsBySegment.length}
                                                     </Typography>
                                                 </div>
-                                            ))}
+                                            ))}*/}
 
-
-                                            <Typography> {flight.oneWay ? <Button variant="contained" color="error">Aller simple </Button> : <Button variant="contained" color="success">Aller retour</Button>}</Typography>
                                         </Box>
                                         <Box sx={{ display: "flex", justifyContent: " space-between", marginTop: "20px" }}>
-                                            <Typography> Inclus seulement les bagages enregistrés :{flight.pricingOptions.includedCheckedBagsOnly ? <Button variant="contained" color="error">Non</Button> : <Button variant="contained" color="success">Oui</Button>}</Typography>
-                                            <p>Nombre de voyageurs : {flight.travelerPricings.length}</p>
-                                            <p>Type de voyage : {flight.travelerPricings[0].fareOption}</p>
-
+                                          <p>Nombre de voyageurs : {flight.travelerPricings.length}</p>
                                         </Box>
                                     </Box>
                                 </Grid>
