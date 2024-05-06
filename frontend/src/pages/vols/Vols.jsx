@@ -8,12 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { formatISO } from 'date-fns';
-<<<<<<< HEAD
-
-import axios from 'axios'; 
-=======
 import axios from 'axios';
->>>>>>> 10808a6fbb9285057b30e6fc2aa559573b8c55fc
 import TextField from '@mui/material/TextField';
 import ComboBox from "./ComboBox";
 
@@ -53,13 +48,13 @@ const Vols = () => {
     const handleSearch = () => {
         const formattedDepartureDate = departureDate ? formatISO(new Date(departureDate)).split('T')[0] : '';
         const formattedReturnDate = returnDate ? formatISO(new Date(returnDate)).split('T')[0] : '';
-    
+
         console.log('Valeur du champ de recherche (origine) :', originIata);
         console.log('Valeur du champ de recherche (destination) :', destinationIata);
         console.log('Date de départ sélectionnée :', formattedDepartureDate);
         console.log('Date de retour sélectionnée :', formattedReturnDate);
         console.log('Nombre de voyageurs adultes :', numberOfAdults);
-    
+
         console.log('Données à envoyer :', {
             originLocationCode: originIata,
             destinationLocationCode: destinationIata,
@@ -67,7 +62,7 @@ const Vols = () => {
             returnDate: formattedReturnDate,
             adults: numberOfAdults
         });
-    
+
         // Effectuer la requête POST vers le backend avec les données des champs en utilisant Axios
         axios.post('http://localhost:3000/api/travel', {
             originLocationCode: originIata,
@@ -84,7 +79,7 @@ const Vols = () => {
                 console.error("Erreur lors de l'envoi des données au back-end:", error);
             });
     };
-    
+
 
     // const handleSearch = () => {
     //     const formattedDepartureDate = departureDate ? formatISO(new Date(departureDate)).split('T')[0] : '';
