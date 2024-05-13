@@ -28,6 +28,7 @@ describe('POST /api/eat', () => {
         // Add other fake data objects here following the same structure
       ]
     };
+
     const fakeAccessToken = '0v8bOSkQhrsWQqIdI6rmV5CYObXJ';
     const fakeLocation = 'paris';
     const fakeCategory = 'NIGHTLIFE';
