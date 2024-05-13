@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const middleware = require('../middleware/auth');
 
 const apiCtrl = require("../controllers/api");
 /**
@@ -173,7 +174,7 @@ router.post("/travel", apiCtrl.getApiTravel);
 router.get("/airport", apiCtrl.getApiAirport);
 /**
  * @swagger
- * /api/eat-drinks:
+ * /api/eat:
  *   post:
  *     summary: Get restaurants and bars based on location, category, and radius.
  *     description: Retrieve restaurants and bars based on specified location, category, and search radius.
@@ -208,7 +209,7 @@ router.get("/airport", apiCtrl.getApiAirport);
  *       500:
  *         description: Internal server error. Indicates a failure to retrieve restaurants and bars.
  */
-router.get("/eat", apiCtrl.getApiEatDrinks);
+router.post("/eat", apiCtrl.getApiEatDrinks);
 //router.get("/drink", apiCtrl.getApiEatDrinks);
 //router.get("/:id", apiCtrl.getApiId);
 

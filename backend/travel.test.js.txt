@@ -1,0 +1,44 @@
+const request = require('supertest');
+const app = require('./app');
+const AmadeusServices = require('./services/amadeusServices');
+
+jest.mock('../services/amadeusServices');
+
+describe('GET /api/travel', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return flight offers when called with valid parameters', async () => {
+    const fakeResponseData = { data: [{ flight: 'offer1' }, { flight: 'offer2' }] };
+    const fakeAccessToken = 'fakeAccessToken';
+    const fakeEndpoint = '/';
+
+    AmadeusServices.prototype.tokenAccessAmadeus.mockResolvedValueOnce(fakeAccessToken);
+    AmadeusServices.prototype.tokenApisCall.mockResolvedValueOnce({ data: fakeResponseData });
+
+    const originLocationCode = 'SYD';
+    const destinationLocationCode = 'BKK';
+    const returnDate = '2024-05-15';
+    const departureDate = '2024-05-05';
+    const adults = 1;
+
+    const response = await request(app)
+      .post('/api/travel')
+      .send({ originLocationCode, destinationLocationCode, returnDate, departureDate, adults });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(fakeResponseData);
+  });
+
+  it('should return 500 error when there is an error in fetching flight offers', async () => {
+    AmadeusServices.prototype.tokenAccessAmadeus.mockRejectedValueOnce(new Error('Fake error'));
+
+    const response = await request(app)
+      .post('/api/travel')
+      .send({});
+
+    expect(response.status).toBe(500);
+    expect(response.text).toBe('Erreur lors de la récupération des options de transport');
+  });
+});

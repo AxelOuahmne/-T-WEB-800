@@ -30,15 +30,21 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
-                    res.status(200).json({
+                    const token = jwt.sign(
+                        { userId: user._id },
+                        'RANDOM_TOKEN_SECRET',
+                        { expiresIn: '24h' }
+                    )
+                    const data = {
                         user:user,
                         userId: user._id,
-                        token: jwt.sign(
-                            { userId: user._id },
-                            'RANDOM_TOKEN_SECRET',
-                            { expiresIn: '24h' }
-                        )
-                    });
+                        token: token
+                    }
+                    res
+                    .header("Authorization", "Bearer " + token)
+                    .cookie("token", token, { httpOnly: true, secure: false })
+                    .status(200)
+                    .json(data);
                 })
                 .catch(error => res.status(500).json({ error }));
         })

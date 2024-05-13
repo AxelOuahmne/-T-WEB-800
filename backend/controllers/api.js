@@ -28,7 +28,8 @@ exports.getApiSleep = async (req, res, next) => {
     const responsee = await amadeusServices.tokenApisCall(
       Endpoint,
       message,
-      accessToken
+      accessToken,
+      res
     );
 
     res.json(responsee.data);
@@ -56,7 +57,8 @@ exports.getApiSleep2 = async (req, res, next) => {
       const responsee = await amadeusServices.tokenApisCall(
         Endpoint,
         message,
-        accessToken
+        accessToken,
+        res
       );
 
       res.json(responsee.data);
@@ -86,7 +88,8 @@ exports.getApiHotelValidate = async (req, res, next) => {
     const responsee = await amadeusServices.tokenApisCall(
       Endpoint,
       message,
-      accessToken
+      accessToken,
+      res
     );
 
     res.json(responsee.data);
@@ -152,7 +155,8 @@ exports.getApiTravel = async (req, res, next) => {
     const responsee = await amadeusServices.tokenApisCall(
       Endpoint,
       message,
-      accessToken
+      accessToken,
+      res
     );
 
     res.json(responsee.data);
@@ -168,8 +172,9 @@ exports.getApiTravel = async (req, res, next) => {
 exports.getApiEatDrinks = async (req, res, next) => {
   try {
     const location = req.body.location;
+
     // Extraire le jeton d'accès de la réponse
-    const accessToken = await amadeusServices.tokenAccessAmadeus();
+    const accessToken = await amadeusServices.tokenAccessAmadeus(res);
 
     // get latitude and longtitude from address
     const url = `https://geocode.maps.co/search?q=${location}&api_key=65f85c1008e38545180841bag1e79bd`;
@@ -181,18 +186,17 @@ exports.getApiEatDrinks = async (req, res, next) => {
       const radius = req.body.radius;
       // Logique pour récupérer et renvoyer les restaurants ou les bars disponibles
       const Endpoint = `https://test.api.amadeus.com/v1/reference-data/locations/pois?categories=${categories}&latitude=${latitude}&longitude=${longitude}&radius=${radius}`;
-      const message = "Erreur lors de la récupération des hébergements";
+      const message = "Erreur lors de la récupération des restaurants ou les bars";
       const responsee = await amadeusServices.tokenApisCall(
         Endpoint,
         message,
         accessToken
       );
-
-      res.json(responsee.data);
+  
+    return res.json(responsee.data).status(200);
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erreur lors de la récupération des restaurants"); // En cas d'erreur, renvoyer une réponse d'erreur
+    res.status(500).send("Erreur lors de la récupération des restaurants ou les bars"); // En cas d'erreur, renvoyer une réponse d'erreur
   }
 };
 
@@ -215,7 +219,8 @@ exports.getApiDrink = async (req, res, next) => {
       const responsee = await amadeusServices.tokenApisCall(
         Endpoint,
         message,
-        accessToken
+        accessToken,
+        res
       );
 
       res.json(responsee.data);
