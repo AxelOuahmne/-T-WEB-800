@@ -38,6 +38,36 @@ exports.getApiSleep = async (req, res, next) => {
   }
 };
 
+exports.getApiHotelValidate = async (req, res, next) => {
+  try {
+    console.log("la requete est dnen : ", req.body.id);
+
+    //Mes variables
+    const idHotel = req.body.idHotel ? req.body.idHotel : "";
+    const checkIn = req.body.checkIn ? req.body.checkIn : "";
+    const checkOut = req.body.checkOut ? req.body.checkOut : "";
+    //const nbAdult = req.body.nbAdult ? req.body.nbAdult : 1;
+    //const qttRoom = req.body.qttRoom ? req.body.qttRoom : 1;
+
+
+    // Vos identifiants Amadeus
+    const accessToken = await amadeusServices.tokenAccessAmadeus();
+    // Utiliser le jeton d'accès pour authentifier la requête vers l'API Amadeus pour rechercher des hôtels
+    const Endpoint   = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${idHotel}&adults=1&checkInDate=${checkIn}&checkOutDate=${checkOut}&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`;
+    //const Endpoint = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=MCPARDTM&adults=1&checkInDate=2024-05-26&checkOutDate=2024-05-27&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`;
+    const message = "Erreur lors de la récupération des hotels";
+    const responsee = await amadeusServices.tokenApisCall(
+        Endpoint,
+        message,
+        accessToken
+    );
+    res.json(responsee.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erreur lors de la récupération des hébergements"); // En cas d'erreur, renvoyer une réponse d'erreur
+  }
+};
+
 exports.getApiSleep2 = async (req, res, next) => {
   try {
     console.log("la requete est dnen : ", req.body.location);
@@ -54,9 +84,9 @@ exports.getApiSleep2 = async (req, res, next) => {
       const Endpoint = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode?latitude=${latitude}&longitude=${longitude}&radius=5&radiusUnit=KM&hotelSource=ALL`;
       const message = "Erreur lors de la récupération des hébergements";
       const responsee = await amadeusServices.tokenApisCall(
-        Endpoint,
-        message,
-        accessToken
+          Endpoint,
+          message,
+          accessToken
       );
 
       res.json(responsee.data);
@@ -67,34 +97,8 @@ exports.getApiSleep2 = async (req, res, next) => {
   }
 };
 
-exports.getApiHotelValidate = async (req, res, next) => {
-  try {
-    console.log("la requete est dnen : ", req.body.destination);
 
-    //Mes variables
-    const idHotel = req.body.idHotel ? req.body.idHotel : "MCLONGHM";
-    const nbAdult = req.body.nbAdult ? req.body.nbAdult : 1;
-    const checkIn = req.body.checkIn ? req.body.checkIn : "";
-    const checkOut = req.body.checkOut ? req.body.checkOut : "";
-    const qttRoom = req.body.qttRoom ? req.body.qttRoom : 1;
-    // Vos identifiants Amadeus
-    const accessToken = await amadeusServices.tokenAccessAmadeus();
-    // Utiliser le jeton d'accès pour authentifier la requête vers l'API Amadeus pour rechercher des hôtels
-    //const url           = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=${idHotel}&adults=${nbAdult}&checkInDate=${checkIn}&checkOutDate=${checkOut}&roomQuantity=${qttRoom}&paymentPolicy=NONE&bestRateOnly=true`;
-    const Endpoint = `https://test.api.amadeus.com/v3/shopping/hotel-offers?hotelIds=MCPARDTM&adults=1&checkInDate=2024-04-26&checkOutDate=2024-04-27&roomQuantity=1&paymentPolicy=NONE&bestRateOnly=true`;
-    const message = "Erreur lors de la récupération des hotels";
-    const responsee = await amadeusServices.tokenApisCall(
-      Endpoint,
-      message,
-      accessToken
-    );
 
-    res.json(responsee.data);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Erreur lors de la récupération des hébergements"); // En cas d'erreur, renvoyer une réponse d'erreur
-  }
-};
 exports.getApiHotelValidate2 = async (req, res, next) => {
   try {
     console.log("la requete est dnen : ", req.body.destination);
@@ -170,10 +174,11 @@ exports.getApiTravel = async (req, res, next) => {
       departureDate,
       adults,
     } = req.body;
+    const nonStop = true;
     // Utiliser les identifiants depuis config.js
     const accessToken = await amadeusServices.tokenAccessAmadeus();
     // Construire l'URL avec les paramètres dynamiques
-    const Endpoint = `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}`;
+    const Endpoint = `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${originLocationCode}&destinationLocationCode=${destinationLocationCode}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&nonStop=${nonStop}`;
     // Logique pour récupérer et renvoyer les restaurants ou les bars disponibles
     const message = "Erreur lors de la récupération de vols";
     const responsee = await amadeusServices.tokenApisCall(

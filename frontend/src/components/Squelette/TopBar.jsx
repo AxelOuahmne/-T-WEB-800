@@ -7,7 +7,7 @@ import Sunny from '@mui/icons-material/WbSunnyOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import logo from "../../assets/Kayak-logo-2.png"
+import logo from "../../assets/NADA.png"
 import CustomizedMenus from "./Menu";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";

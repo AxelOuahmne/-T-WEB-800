@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLogin } from "../../hooks/useLogin";
 import { Avatar, Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import { deepOrange } from "@mui/material/colors";
+import {blue, deepOrange} from "@mui/material/colors";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -27,11 +27,10 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <Grid align={"center"} sx={{ mb: "10px", mt: "10px" }}>
             <Box display={"flex"} alignItems={"center"} gap={"15px"} marginBottom={"10px"} justifyContent={"center"}>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>K</Avatar>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>Y</Avatar>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>K</Avatar>
+              <Avatar sx={{ bgcolor: blue[500] }}>A</Avatar>
+              <Avatar sx={{ bgcolor: blue[500] }}>N</Avatar>
+              <Avatar sx={{ bgcolor: blue[500] }}>D</Avatar>
+              <Avatar sx={{ bgcolor: blue[500] }}>A</Avatar>
             </Box>
             <h2>Sign in</h2>
           </Grid>

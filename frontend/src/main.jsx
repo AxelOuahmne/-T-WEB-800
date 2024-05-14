@@ -25,7 +25,6 @@ const router = createBrowserRouter(
     <Route path='/hotels' element={<Hotels />} />
     <Route path='/maps' element={<Maps />} />
     <Route path='/allMaps' element={<AllMaps />} />
-      {/* ... etc. */}
     </Route>
   )
 );
@@ -34,6 +33,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <AuthContextProvaider>
     <RouterProvider router={router} />
     </AuthContextProvaider>
-   
   </React.StrictMode>
 );
