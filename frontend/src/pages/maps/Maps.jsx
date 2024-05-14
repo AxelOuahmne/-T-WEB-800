@@ -19,81 +19,138 @@ import {
 
 import { useJsApiLoader } from '@react-google-maps/api';
 
-const center = {
-    lat: 48.8566, // Latitude de Paris
-    lng: 2.3522    // Longitude de Paris
-};
+const center = { lat: 48.8584, lng: 2.2945 };
 
-const Maps = () => {
-    const [destination, setDestination] = useState("");
-    const [startLocation, setStartLocation] = useState(null);
-    const [endLocation, setEndLocation] = useState(null);
-    const [directions, setDirections] = useState(null);
+function Maps() {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyB4poGuphIn0U1MvnuJ3GrekYi3AIRsUl4',
+    libraries: ['places'],
+  });
 
-    const handlePlaceSelect = (place) => {
-        console.log('Adresse sélectionnée:', place);
-        setDestination(place.formatted_address);
-    };
+  const [map, setMap] = useState(null);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
+  const originRef = useRef(null);
+  const destinationRef = useRef(null);
 
-    const handleMapClick = (e) => {
-        console.log('Coordonnées du clic:', e.latLng);
-        setEndLocation({
-            lat: e.latLng.lat(),
-            lng: e.latLng.lng()
-        });
-    };
+  const calculateRoute = async () => {
+    if (!originRef.current.value || !destinationRef.current.value) {
+      return;
+    }
+    const directionsService = new google.maps.DirectionsService();
+    const results = await directionsService.route({
+      origin: originRef.current.value,
+      destination: destinationRef.current.value,
+      travelMode: google.maps.TravelMode.DRIVING,
+    });
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text);
+    setDuration(results.routes[0].legs[0].duration.text);
+  };
 
-    const onDirectionsLoad = (directions) => {
-        console.log('Directions:', directions);
-        setDirections(directions);
-    };
+  const clearRoute = () => {
+    setDirectionsResponse(null);
+    setDistance('');
+    setDuration('');
+    originRef.current.value = '';
+    destinationRef.current.value = '';
+  };
 
-    return (
-        <Box>
-                <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={center}
-                    zoom={10}
-                    onClick={handleMapClick}
-                >
-                    {/* Champ de recherche d'adresse pour la destination */}
-                    <Autocomplete
-                        onLoad={handlePlaceSelect}
-                        options={{ types: ['geocode'] }}
-                    >
-                        <input
-                            placeholder="Rechercher une adresse ..."
-                            type="text"
-                            style={{
-                                boxSizing: `border-box`,
-                                border: `1px solid transparent`,
-                                width: `240px`,
-                                height: `32px`,
-                                padding: `0 12px`,
-                                borderRadius: `3px`,
-                                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                                fontSize: `14px`,
-                                outline: `none`,
-                                textOverflow: `ellipses`,
-                                position: "absolute",
-                                left: "50%",
-                                marginLeft: "-120px",
-                                marginTop: "10px"
-                            }}
-                        />
-                    </Autocomplete>
+  if (!isLoaded) {
+    return <Skeleton />;
+  }
 
-                    {/* Affichage du marqueur pour le point de départ */}
-                    {startLocation && <Marker position={startLocation} />}
+  return (
+    <Box
+      display='flex'
+      flexDirection='column'
+      alignItems='center'
+      height='100vh'
+      width='100vw'
+    >
+      <Box position='relative' left={0} top={0} height='100%' width='100%'>
+        <GoogleMap
+          center={center}
+          zoom={15}
+          mapContainerStyle={{ width: '100%', height: '100%' }}
+          options={{
+            zoomControl: false,
+            streetViewControl: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+          }}
+          onLoad={(map) => setMap(map)}
+        >
+          <Marker position={center} />
+          {directionsResponse && (
+            <DirectionsRenderer directions={directionsResponse} />
+          )}
+        </GoogleMap>
+      </Box>
+      <Box
+        p={4}
+        borderRadius='lg'
+        m={4}
+        bgcolor='#fff'
+        color='#000'
+        boxShadow='base'
+        minWidth='container.md'
+        zIndex='1'
+        opacity={0.6}
+      >
+        <Box
+          display='flex'
+          spacing={2}
+          justifyContent='space-between'
+          alignItems='center'
+        >
+          <Box flex={1}>
+            <Autocomplete>
+              <Input type='text' placeholder='Origin' inputRef={originRef} />
+            </Autocomplete>
+          </Box>
+          <Box flex={1}>
+            <Autocomplete>
+              <Input
+                type='text'
+                placeholder='Destination'
+                inputRef={destinationRef}
+              />
+            </Autocomplete>
+          </Box>
 
-                    {/* Affichage du marqueur pour le point d'arrivée */}
-                    {endLocation && <Marker position={endLocation} />}
-
-                    {/* Affichage du trajet */}
-                    {directions && <DirectionsRenderer directions={directions} onLoad={onDirectionsLoad} />}
-                </GoogleMap>
+          <ButtonGroup>
+            <Button colorScheme='pink' onClick={calculateRoute}>
+              Calculate Route
+            </Button>
+            <IconButton aria-label='Clear' onClick={clearRoute}>
+              <FaTimes />
+            </IconButton>
+          </ButtonGroup>
         </Box>
-    );
-};
+        <Box
+          display='flex'
+          spacing={4}
+          mt={4}
+          justifyContent='space-between'
+          alignItems='center'
+        >
+          <Typography>Distance: {distance} </Typography>
+          <Typography>Duration: {duration} </Typography>
+          <IconButton
+            aria-label='Center'
+            onClick={() => {
+              map.panTo(center);
+              map.setZoom(15);
+            }}
+          >
+            <FaLocationArrow />
+          </IconButton>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 export default Maps;
