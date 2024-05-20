@@ -15,6 +15,7 @@ import Card from '@mui/material/Card';
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
+
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
