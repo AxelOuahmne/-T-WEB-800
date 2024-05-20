@@ -123,7 +123,6 @@ const Vols = () => {
 
             <Box sx={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "center" }}>
                 <ComboBox dis={originIata} setDis={setOriginIata} />
-                <SyncAltIcon sx={{ fontSize: "40px" }} />
                 <ComboBox dis={destinationIata} setDis={setDestinationIata}  />
 
                 {/* <ComboBox dis={originIata} setDis={setOriginIata} style={{ width: "400px", display: "flex", alignItems: "center", padding: "5px 0px" }} /> */}

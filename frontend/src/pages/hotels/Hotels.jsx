@@ -3,11 +3,10 @@ import { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Button, Box, alpha, Stack } from "@mui/material";
+import { Button, Box, alpha, Stack, Grid, TextField } from "@mui/material";
 import styled from "@emotion/styled";
 import RecipeReviewCard from './RecipeReviewCard';
 // import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
-
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -75,52 +74,53 @@ const Hotels = () => {
             });
     };
 
-
-
     return (
-
         <Box>
             <h1>Où voulez-vous séjourner ?</h1>
-            <Box sx={{ display: "flex", justifyContent: "center", gap: "20px" }}>
-                {/* Premier champ */}
-                <Search style={{ width: "600px", display: "flex", alignItems: "center", padding: "5px 0px" }}>
-                    <input
-                        id="autocomplete"
-                        placeholder="Choisir sa destination ..."
-                        type="text"
-                        aria-label="search"
-                        className="searchName"
-                        value={destination}
-                        onChange={(e) => setDestination(e.target.value)}
-                        style={{ width: "100%" }} // Ajustez la largeur de l'input
-                    />
-                </Search>
-                <Box sx={{ width: "400px" }}>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Search>
+                        <input
+                            id="autocomplete"
+                            placeholder="Choisir sa destination ..."
+                            type="text"
+                            aria-label="search"
+                            className="searchName"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                            style={{ width: "100%" }} // Ajustez la largeur de l'input
+                        />
+                    </Search>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Date d'arrivée"
-                            sx={{ width: "400px" }}
+                            sx={{ width: "100%" }}
                             value={arrivalDate}
                             onChange={(date) => setArrivalDate(date)}
+                            renderInput={(params) => <TextField {...params} fullWidth />}
                         />
                     </LocalizationProvider>
-                </Box>
-                <Box>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                             label="Date de départ"
-                            sx={{ width: "400px" }}
+                            sx={{ width: "100%" }}
                             value={departureDate}
                             onChange={(date) => setDepartureDate(date)}
+                            renderInput={(params) => <TextField {...params} fullWidth />}
                         />
                     </LocalizationProvider>
-                </Box>
-                {/* Bouton Rechercher */}
-                <Button variant="contained" onClick={handleSearch}>Rechercher</Button>
-            </Box>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <Button variant="contained" onClick={handleSearch} fullWidth>Rechercher</Button>
+                </Grid>
+            </Grid>
 
-            <Box sx={{marginTop:"70px"}}>
-                <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" sx={{marginTop:"30px"}}>
+            <Box sx={{ marginTop: "70px" }}>
+                <Stack spacing={{ xs: 1, sm: 2 }} direction="row" useFlexGap flexWrap="wrap" sx={{ marginTop: "30px" }}>
                     {searchResults.map((result, index) => (
                         <div key={index}>
                             <RecipeReviewCard hotel={result} />

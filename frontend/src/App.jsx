@@ -6,7 +6,10 @@ import SaidBar from './components/Squelette/SaidBar';
 import { Box, ThemeProvider, createTheme } from '@mui/material';
 import { getDesignTokens } from './Theme';
 import { Outlet, useNavigate } from 'react-router-dom'; // Importez useNavigate depuis react-router-dom
-
+import AOS from 'aos';
+import Home from './pages/Home';
+import 'aos/dist/aos.css';
+import Footer from "./components/Footer/Footer";
 const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -28,9 +31,17 @@ export default function MiniDrawer() {
         setOpen(false);
     };
 
-    const [mode, setMode] = React.useState(localStorage.getItem('currenMode')!==null ?localStorage.getItem('currenMode'):'light');
+    const [mode, setMode] = React.useState(localStorage.getItem('currenMode') !== null ? localStorage.getItem('currenMode') : 'light');
     const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
-
+    React.useEffect(() => {
+        AOS.init({
+            offset: 100,
+            duration: 900,
+            easing: "ease-in-sine",
+            delay: 100,
+        });
+        AOS.refresh();
+    }, []);
     React.useEffect(() => {
         // Vérifiez le statut de l'API ici
         // Si le statut est 401, redirigez l'utilisateur vers la page de connexion
@@ -55,10 +66,14 @@ export default function MiniDrawer() {
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
                 <TopBar open={open} handleDrawerOpen={handleDrawerOpen} setMode={setMode} />
-                <SaidBar open={open}  handleDrawerClose={handleDrawerClose} />
+                <SaidBar open={open} handleDrawerClose={handleDrawerClose} />
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                     <DrawerHeader />
+                    {location.pathname === '/' && (<>
+                        <Home />
+                    </>)}
                     <Outlet />
+                
                 </Box>
             </Box>
         </ThemeProvider>

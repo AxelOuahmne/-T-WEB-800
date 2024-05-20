@@ -1,90 +1,50 @@
-import React from 'react';
-
-import { Box, Button, IconButton, InputBase, Stack, Toolbar, alpha, styled, useTheme } from "@mui/material"
+import React, { useState, useEffect } from 'react';
+import { AppBar, Toolbar, IconButton, Box, Button, Stack, useTheme, styled, alpha, InputBase } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import MuiAppBar from '@mui/material/AppBar';
 import Sunny from '@mui/icons-material/WbSunnyOutlined';
 import DarkMode from '@mui/icons-material/DarkModeOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import logo from "../../assets/NADA.png"
+import logo from "../../assets/NADA.png";
 import CustomizedMenus from "./Menu";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-const drawerWidth = 240;
 
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
+const StyledAppBar = styled(AppBar)(({ theme, scrolled }) => ({
+  transition: theme.transitions.create(['margin', 'background-color'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+  ...(scrolled && {
+    marginTop: '-64px', // Adjust this value according to your AppBar height
+    backgroundColor: theme.palette.background.paper, // Change background color when scrolled
   }),
 }));
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-
-
-
-function TopBar({ open, handleDrawerOpen, setMode }) {
+const TopBar = ({ open, handleDrawerOpen, setMode }) => {
   const theme = useTheme();
-
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 0;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <>
-
-      <AppBar position="fixed" open={open} color="transparent">
-        <Toolbar >
+      <StyledAppBar position="fixed" open={open} scrolled={scrolled} color='transparent'>
+        <Toolbar>
           <IconButton
-            // color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
@@ -97,10 +57,7 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
           </IconButton>
           <img src={logo} alt="Kayak-logo-2" width={120} />
           <Box flexGrow={1} />
-
           <Stack direction={"row"}>
-
-
             {
               theme.palette.mode === "light" ? (
                 <IconButton onClick={() => {
@@ -123,22 +80,18 @@ function TopBar({ open, handleDrawerOpen, setMode }) {
                 </IconButton>
               )
             }
-
             <IconButton color="inherit">
-              <FavoriteIcon />  
+              <FavoriteIcon />
             </IconButton>
-            {!user&&(<Button onClick={()=>{navigate('/login')}} variant="outlined" startIcon={< AccountCircleIcon/>}  sx={{padding:"10px"}} color="inherit">
-            Connexion
+            {!user && (<Button onClick={() => { navigate('/login') }} variant="outlined" startIcon={<AccountCircleIcon />} sx={{ padding: "10px" }} color="inherit">
+              Connexion
             </Button>)}
-            {user&&(<CustomizedMenus user={user.nom}/>)}
-
+            {user && (<CustomizedMenus user={user.nom} />)}
           </Stack>
-
-
         </Toolbar>
-      </AppBar>
+      </StyledAppBar>
     </>
   )
 }
 
-export default TopBar
+export default TopBar;

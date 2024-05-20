@@ -15,6 +15,7 @@ import {AuthContextProvaider}  from './context/AuthContext';
 import Hotels from "./pages/hotels/Hotels.jsx";
 import Maps from "./pages/maps/Maps.jsx";
 import AllMaps from './components/allMaps/AllMaps.jsx';
+import NoPage from "./pages/NoPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
     <Route path='/hotels' element={<Hotels />} />
     <Route path='/maps' element={<Maps />} />
     <Route path='/allMaps' element={<AllMaps />} />
+    <Route path="*" element={<NoPage />} />
     </Route>
   )
 );
