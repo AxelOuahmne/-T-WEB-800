@@ -1,14 +1,42 @@
-const request = require('supertest');
-const app = require('../app');
+const puppeteer = require('puppeteer');
 const axios = require('axios');
 const AmadeusServices = require('../services/amadeusServices');
+const app = require('../app');
+const http = require('http');
 
 jest.mock('axios');
 jest.mock('../services/amadeusServices');
 
-describe('POST /api/eat', () => {
-  afterEach(() => {
+let server;
+let browser;
+
+beforeAll((done) => {
+  server = http.createServer(app);
+  server.listen(done);
+});
+
+afterAll((done) => {
+  server.close(done);
+});
+
+describe('E2E test for /api/eat', () => {
+  let page;
+
+  beforeAll(async () => {
+    browser = await puppeteer.launch({ headless: true });
+  });
+
+  beforeEach(async () => {
+    page = await browser.newPage();
+  });
+
+  afterEach(async () => {
+    await page.close();
     jest.clearAllMocks();
+  });
+
+  afterAll(async () => {
+    await browser.close();
   });
 
   it('should return restaurants or bars when called with valid parameters', async () => {
@@ -24,8 +52,7 @@ describe('POST /api/eat', () => {
           category: 'NIGHTLIFE',
           rank: 10,
           tags: ['restaurant', 'bar', 'nightlife', 'pub', 'tourguide', 'sightseeing', 'activities', 'attraction']
-        },
-        // Add other fake data objects here following the same structure
+        }
       ]
     };
 
@@ -38,22 +65,72 @@ describe('POST /api/eat', () => {
     AmadeusServices.prototype.tokenAccessAmadeus.mockResolvedValueOnce(fakeAccessToken);
     AmadeusServices.prototype.tokenApisCall.mockResolvedValueOnce({ data: fakeResponseData });
 
-    const response = await request(app)
-      .post('/api/eat')
-      .send({ location: fakeLocation, category: fakeCategory, radius: fakeRadius });
+    const testUrl = `http://localhost:${server.address().port}/api/eat`;
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(fakeResponseData);
+    try {
+      await page.goto(testUrl);
+
+      const requestData = {
+        location: fakeLocation,
+        category: fakeCategory,
+        radius: fakeRadius
+      };
+
+      const response = await page.evaluate(async (requestData) => {
+        try {
+          const response = await fetch('/api/eat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+          });
+          const data = await response.json();
+          return { status: response.status, body: data };
+        } catch (error) {
+          console.error('Error occurred during request:', error);
+          throw error;
+        }
+      }, requestData);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(fakeResponseData);
+    } catch (error) {
+      console.error('Error occurred during test:', error);
+      throw error;
+    }
   });
 
   it('should return 500 error when there is an error in fetching restaurants or bars', async () => {
     axios.get.mockRejectedValueOnce(new Error('Fake error'));
 
-    const response = await request(app)
-      .post('/api/eat')
-      .send({});
+    const testUrl = `http://localhost:${server.address().port}/api/eat`;
 
-    expect(response.status).toBe(500);
-    expect(response.text).toBe('Erreur lors de la récupération des restaurants ou les bars');
+    try {
+      await page.goto(testUrl);
+
+      const response = await page.evaluate(async () => {
+        try {
+          const response = await fetch('/api/eat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+          });
+          const text = await response.text();
+          return { status: response.status, text: text };
+        } catch (error) {
+          console.error('Error occurred during request:', error);
+          throw error;
+        }
+      });
+
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('Erreur lors de la récupération des restaurants ou les bars');
+    } catch (error) {
+      console.error('Error occurred during test:', error);
+      throw error;
+    }
   });
 });
