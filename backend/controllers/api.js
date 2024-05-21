@@ -1,5 +1,6 @@
 const axios = require("axios");
 const Amadeus = require("amadeus");
+
 const config = require("../config/config.js");
 const AmadeusServices = require("../services/amadeusServices.js");
 const amadeusServices = new AmadeusServices();
